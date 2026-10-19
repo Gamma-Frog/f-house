@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0d12">
+<title>Vibe Set</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23111'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23b4ff39' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23b4ff39'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0d0d12; --panel:#16161d; --panel2:#1e1e27; --line:#2a2a36;
+  --text:#f1f1f5; --muted:#9a9aab; --accent:#b4ff39; --accent-ink:#0d0d12;
+  --sp:#1ed760; --sc:#ff5500; --warn:#ffb347; --bad:#ff5c7a;
+  --radius:14px; --gutter:16px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;-webkit-text-size-adjust:100%}
+body{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 var(--gutter)}
+header{position:sticky;top:0;z-index:10;background:rgba(13,13,18,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+header .wrap{display:flex;align-items:center;gap:10px;height:56px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:-.02em;font-size:18px;flex:1}
+.logo svg{width:26px;height:26px}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 12px;font-size:13px;cursor:pointer}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.pill.on .dot{background:var(--sp)}
+.iconbtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--panel);display:grid;place-items:center;cursor:pointer;flex:none}
+.iconbtn svg{width:20px;height:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-top:16px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px;font-weight:600}
+textarea{width:100%;min-height:76px;resize:vertical;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:16px;outline:none}
+textarea:focus,input[type=text]:focus,select:focus{border-color:var(--accent)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 2px;scrollbar-width:none;margin:0 -16px;padding-left:16px;padding-right:16px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:8px 12px;font-size:14px;cursor:pointer;white-space:nowrap}
+.chip:active{transform:scale(.97)}
+details{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;color:var(--muted);font-size:14px;list-style:none;display:flex;align-items:center;gap:6px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+.field.full{grid-column:1/-1}
+select,input[type=text]{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:16px;outline:none;width:100%;color:var(--text)}
+.seg{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;border-radius:8px;padding:8px 4px;font-size:13px;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--accent);color:var(--accent-ink);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.rangelbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--text);font-size:14px}
+.toggle input{width:20px;height:20px;accent-color:var(--accent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:14px 18px;font-weight:700;cursor:pointer;font-size:16px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);width:100%;margin-top:14px}
+.btn.ghost{background:var(--panel2);border:1px solid var(--line)}
+.btn.sp{background:var(--sp);color:#06200f}
+.btn:disabled{opacity:.5;cursor:default}
+.status{margin-top:12px;font-size:14px;color:var(--muted);min-height:20px}
+.status.err{color:var(--bad)}
+.bar{height:4px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:8px;display:none}
+.bar.on{display:block}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+
+.summary{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline}
+.summary .big{font-size:20px;font-weight:800;letter-spacing:-.02em;flex:1 1 100%}
+.summary .sm{font-size:13px;color:var(--muted)}
+.tools{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.tools .btn{padding:9px 12px;font-size:14px;font-weight:600}
+
+.phase{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin:18px 2px 6px;display:flex;align-items:center;gap:8px}
+.phase::after{content:"";flex:1;height:1px;background:var(--line)}
+ol.tracks{list-style:none;margin:0;padding:0}
+.trk{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:6px;overflow:hidden}
+.trk .row{display:flex;align-items:center;gap:10px;padding:8px 8px 8px 10px;min-height:64px}
+.num{width:22px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;font-size:13px;flex:none}
+.cover{width:46px;height:46px;border-radius:8px;background:var(--panel2);flex:none;position:relative;overflow:hidden;border:0;padding:0;cursor:pointer}
+.cover img{width:100%;height:100%;object-fit:cover;display:block}
+.cover .play{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);opacity:0}
+.cover.has-prev .play{opacity:1}
+.cover.playing .play{background:rgba(180,255,57,.55)}
+.cover .play svg{width:18px;height:18px}
+.meta{flex:1;min-width:0;cursor:pointer}
+.t{font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);margin-top:3px}
+.heat{width:46px;height:4px;border-radius:3px;background:var(--panel2);overflow:hidden}
+.heat i{display:block;height:100%;background:linear-gradient(90deg,#3d7dff,var(--accent),#ff5c7a)}
+.tag{border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:10px}
+.tag.sp-ok{border-color:var(--sp);color:var(--sp)}
+.tag.sp-miss{border-color:var(--bad);color:var(--bad)}
+.sc{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:rgba(255,85,0,.12);color:var(--sc);flex:none;text-decoration:none}
+.sc svg{width:22px;height:22px}
+.actions{display:none;gap:6px;padding:0 10px 10px;flex-wrap:wrap}
+.trk.open .actions{display:flex}
+.actions button,.actions a{flex:1 1 auto;min-width:64px;border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:9px 8px;font-size:13px;cursor:pointer;text-align:center;text-decoration:none}
+.actions .del{color:var(--bad)}
+
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(13,13,18,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:10px 0 calc(10px + env(safe-area-inset-bottom));display:none}
+.dock.on{display:block}
+.dock .wrap{display:flex;gap:8px}
+.dock .btn{flex:1;padding:13px 6px;font-size:14px}
+
+dialog{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:18px;padding:0;width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 40px)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+.dlg{padding:18px;display:flex;flex-direction:column;gap:12px}
+.dlg h3{margin:0;font-size:18px}
+.dlg p,.dlg li{color:var(--muted);font-size:14px;margin:0}
+.dlg ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.dlg code{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:2px 6px;font-size:13px;word-break:break-all;color:var(--text)}
+.dlg .row2{display:flex;gap:8px}
+.dlg .row2 .btn{flex:1}
+.copyline{display:flex;gap:8px;align-items:center}
+.copyline code{flex:1;padding:8px}
+.miss{max-height:160px;overflow:auto;font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.note{font-size:12px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;transition:.2s;pointer-events:none;z-index:50;max-width:calc(100vw - 32px);text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty{text-align:center;color:var(--muted);padding:28px 8px 8px;font-size:14px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="logo">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="#1e1e27" stroke="#2a2a36" stroke-width="2"/><circle cx="32" cy="32" r="19" fill="none" stroke="#b4ff39" stroke-width="3"/><circle cx="32" cy="32" r="5" fill="#b4ff39"/></svg>
+      Vibe Set
+    </div>
+    <button class="pill" id="spPill" type="button"><span class="dot"></span><span id="spPillTxt">Spotify</span></button>
+    <button class="iconbtn" id="openSettings" type="button" aria-label="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card">
+    <h2>What's the vibe?</h2>
+    <textarea id="vibe" placeholder="e.g. sunset rooftop, deep house, classy but fun" enterkeyhint="go"></textarea>
+    <div class="chips" id="chips"></div>
+
+    <details id="opts">
+      <summary>Set options</summary>
+      <div class="grid">
+        <label class="field">Tracks
+          <select id="optLen">
+            <option value="15">15 (~1 hr)</option>
+            <option value="25" selected>25 (~1.5 hr)</option>
+            <option value="40">40 (~2.5 hr)</option>
+            <option value="60">60 (~4 hr)</option>
+          </select>
+        </label>
+        <label class="field">Max per artist
+          <select id="optArtist">
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+          </select>
+        </label>
+        <div class="field full">Set shape
+          <div class="seg" id="optShape">
+            <button type="button" data-v="arc" class="on">Energy arc</button>
+            <button type="button" data-v="hits">Hits first</button>
+            <button type="button" data-v="build">Slow build</button>
+          </div>
+        </div>
+        <div class="field full">Track picks
+          <input type="range" id="optPop" min="0" max="100" value="80">
+          <div class="rangelbl"><span>Deep cuts</span><span>Big crowd-pleasers</span></div>
+        </div>
+        <label class="field full">Leave out (words or artists, comma-separated)
+          <input type="text" id="optExclude" placeholder="e.g. remix, Drake" autocomplete="off">
+        </label>
+        <label class="toggle full field" style="grid-column:1/-1">Clean versions only (no explicit)
+          <input type="checkbox" id="optClean">
+        </label>
+      </div>
+    </details>
+
+    <button class="btn primary" id="go" type="button">Build my set</button>
+    <div class="bar" id="bar"><i></i></div>
+    <div class="status" id="status"></div>
+  </section>
+
+  <section id="results" class="hidden">
+    <div class="card">
+      <div class="summary">
+        <div class="big" id="sumTitle"></div>
+        <span class="sm" id="sumLen"></span>
+        <span class="sm" id="sumSrc"></span>
+      </div>
+      <div class="tools">
+        <button class="btn ghost" id="remix" type="button">↻ Remix</button>
+        <button class="btn ghost" id="reflow" type="button">⇅ Re-order</button>
+        <button class="btn ghost" id="more" type="button">+ 5 tracks</button>
+      </div>
+      <p class="note" style="margin:10px 0 0">Picks favor songs that are both popular and played by several curators of this vibe. The <b>heat</b> bar shows how well-known each one is within the set, and the order follows your set shape. Songs that curators place side by side stay together for smoother transitions. Tap a track for more options.</p>
+    </div>
+    <div id="list"></div>
+  </section>
+</main>
+
+<nav class="dock" id="dock">
+  <div class="wrap">
+    <button class="btn ghost" id="copyBtn" type="button">Copy</button>
+    <button class="btn ghost" id="csvBtn" type="button">CSV</button>
+    <button class="btn sp" id="spBtn" type="button">Spotify</button>
+  </div>
+</nav>
+
+<dialog id="settings">
+  <form method="dialog" class="dlg">
+    <h3>Spotify setup</h3>
+    <p>Spotify export uses your own Spotify app, so nothing passes through anyone else's server. You only do this once.</p>
+    <ol>
+      <li>Open <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">developer.spotify.com/dashboard</a> and create an app. Tick <b>Web API</b>.</li>
+      <li>Add this exact <b>Redirect URI</b>:
+        <div class="copyline" style="margin-top:6px"><code id="redirUri"></code><button class="btn ghost" type="button" id="copyRedir" style="padding:8px 10px;font-size:13px">Copy</button></div>
+      </li>
+      <li>Copy the app's <b>Client ID</b> below. No client secret is needed (PKCE).</li>
+      <li>If someone other than the app owner will log in, add their Spotify email under <b>User Management</b>.</li>
+    </ol>
+    <label class="field">Client ID
+      <input type="text" id="clientId" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="32-character client ID">
+    </label>
+    <p class="note" id="secureNote"></p>
+    <div class="row2">
+      <button class="btn ghost" type="button" id="logoutBtn">Disconnect</button>
+      <button class="btn primary" style="margin:0" type="button" id="saveSettings">Save &amp; connect</button>
+    </div>
+    <button class="btn ghost" value="close">Close</button>
+  </form>
+</dialog>
+
+<dialog id="exportDlg">
+  <form method="dialog" class="dlg">
+    <h3>Save to Spotify</h3>
+    <label class="field">Playlist name
+      <input type="text" id="plName" autocomplete="off">
+    </label>
+    <label class="toggle">Make it public <input type="checkbox" id="plPublic"></label>
+    <div class="bar" id="exBar"><i></i></div>
+    <p id="exStatus"></p>
+    <div id="exMiss" class="miss hidden"></div>
+    <a id="exOpen" class="btn sp hidden" target="_blank" rel="noopener">Open in Spotify</a>
+    <div class="row2">
+      <button class="btn ghost" value="close">Close</button>
+      <button class="btn sp" type="button" id="exGo">Create playlist</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast"></div>
+<audio id="audio" preload="none"></audio>
+
+<script>
+'use strict';
+/* =========================================================================
+   Vibe Set — vibe text → ordered DJ set
+   Data: Deezer public API (JSONP, no key) for vibe playlists + popularity rank.
+   Export: Spotify Web API (Authorization Code + PKCE, user-supplied client ID).
+   ========================================================================= */
+
+const $ = s => document.querySelector(s);
+const LS = {
+  get(k, d = null) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} },
+};
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const fmtDur = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+
+function toast(msg, ms = 2200) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), ms);
+}
+function setStatus(msg, err = false) { const s = $('#status'); s.textContent = msg; s.classList.toggle('err', err); }
+function setBar(el, frac) { el.classList.toggle('on', frac != null); if (frac != null) el.firstElementChild.style.width = `${Math.round(frac * 100)}%`; }
+
+// Small deterministic RNG so "Remix" gives a different-but-reproducible variant.
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+async function pool(items, limit, fn) {
+  const out = new Array(items.length); let i = 0;
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (i < items.length) { const k = i++; out[k] = await fn(items[k], k); }
+  }));
+  return out;
+}
+
+/* ----------------------------- Deezer (JSONP) ---------------------------- */
+// Deezer's API doesn't send CORS headers, but supports JSONP.
+let dzN = 0;
+function dz(path, params = {}) {
+  return new Promise((resolve, reject) => {
+    const cb = `__dz${++dzN}`;
+    const s = document.createElement('script');
+    const done = () => { clearTimeout(timer); window[cb] = () => {}; s.remove(); };
+    const timer = setTimeout(() => { done(); reject(new Error('Deezer timed out')); }, 15000);
+    window[cb] = data => {
+      done();
+      if (data && data.error) reject(new Error(data.error.message || 'Deezer error')); else resolve(data);
+    };
+    s.onerror = () => { done(); reject(new Error('Could not reach Deezer')); };
+    const q = new URLSearchParams({ ...params, output: 'jsonp', callback: cb });
+    s.src = `https://api.deezer.com${path}?${q}`;
+    document.head.appendChild(s);
+  });
+}
+
+/* ----------------------------- Vibe engine ------------------------------- */
+const PRESETS = [
+  ['🌅 Sunset rooftop', 'sunset deep house, rooftop lounge house'],
+  ['🏠 House party', 'house party anthems'],
+  ['🔥 Pregame hype', 'pregame hip hop, party rap'],
+  ['💿 2000s throwback', '2000s party hits'],
+  ['🕺 80s night', '80s party'],
+  ['💃 Latin heat', 'reggaeton party, perreo'],
+  ['🌍 Afrobeats', 'afrobeats party, amapiano'],
+  ['🎸 Indie dance', 'indie dance party'],
+  ['⚡ Peak-time techno', 'peak time techno'],
+  ['🥁 Drum & bass', 'drum and bass party'],
+  ['🎤 Pop singalong', 'pop singalong hits'],
+  ['🍷 Chill dinner', 'chill dinner party'],
+];
+
+const JUNK = /\b(karaoke|tribute|instrumental version|originally performed|in the style of|8[- ]bit|lullaby|ringtone|cover version|made famous)\b/i;
+
+function norm(s) {
+  return (s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
+    .replace(/\(.*?\)|\[.*?\]/g, ' ').replace(/\s-\s.*$/, ' ')
+    .replace(/\b(feat|ft|featuring)\b.*$/, ' ')
+    .replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function vibeQueries(vibe) {
+  const parts = vibe.split(/[,;\n/]+|\s+\+\s+/).map(s => s.trim()).filter(s => s.length > 1);
+  const qs = [vibe.replace(/[,;\n]+/g, ' ').replace(/\s+/g, ' ').trim()];
+  for (const p of parts) if (!qs.includes(p)) qs.push(p);
+  return qs.slice(0, 4);
+}
+
+async function findVibePlaylists(vibe, onProg) {
+  const queries = vibeQueries(vibe);
+  const lists = await Promise.all(queries.map(q =>
+    dz('/search/playlist', { q, limit: 25 }).then(r => r.data || []).catch(() => [])));
+  // Interleave results across queries so every part of the vibe is represented.
+  const picked = [], seen = new Set(), perOwner = new Map(), max = 12;
+  for (let i = 0; picked.length < max && i < 25; i++) {
+    for (const list of lists) {
+      const p = list[i];
+      if (!p || seen.has(p.id) || p.nb_tracks < 15 || p.nb_tracks > 1500) continue;
+      const owner = p.user?.id ?? p.id;                 // max 2 playlists per curator/label
+      if ((perOwner.get(owner) || 0) >= 2) continue;
+      perOwner.set(owner, (perOwner.get(owner) || 0) + 1);
+      seen.add(p.id); picked.push(p);
+      if (picked.length >= max) break;
+    }
+  }
+  onProg?.(0.15);
+  let n = 0;
+  const withTracks = await pool(picked, 4, async p => {
+    const r = await dz(`/playlist/${p.id}/tracks`, { limit: 100 }).catch(() => null);
+    onProg?.(0.15 + 0.75 * (++n / picked.length));
+    return r && r.data ? { id: p.id, owner: p.user?.id ?? p.id, title: p.title, tracks: r.data } : null;
+  });
+  const lists2 = withTracks.filter(Boolean);
+  // Labels often run several near-identical playlists from different accounts.
+  // If two playlists share over half their tracks, count them as one curator.
+  const keysOf = pl => new Set(pl.tracks.filter(t => t?.artist).map(t => `${norm(t.artist.name)}|${norm(t.title_short || t.title)}`));
+  const ks = lists2.map(keysOf);
+  lists2.forEach((pl, i) => {
+    for (let j = 0; j < i; j++) {
+      let shared = 0; ks[i].forEach(k => ks[j].has(k) && shared++);
+      if (shared / Math.min(ks[i].size, ks[j].size || 1) > 0.5) { pl.owner = lists2[j].owner; break; }
+    }
+  });
+  return lists2;
+}
+
+function buildCandidates(playlists, opts) {
+  const map = new Map();
+  const excl = (opts.exclude || '').split(',').map(s => norm(s)).filter(Boolean);
+  for (const pl of playlists) {
+    pl.tracks.forEach((t, idx) => {
+      if (!t || !t.readable || !t.artist) return;
+      const title = t.title_short || t.title;
+      const full = `${t.title} ${t.title_version || ''}`;
+      if (JUNK.test(full) || JUNK.test(t.artist.name)) return;
+      if (t.duration && (t.duration < 90 || t.duration > 600)) return;
+      if (opts.clean && t.explicit_lyrics) return;
+      const hay = norm(`${t.title} ${t.artist.name} ${t.album?.title || ''}`);
+      if (excl.some(x => (' ' + hay + ' ').includes(' ' + x + ' '))) return;
+      const key = `${norm(t.artist.name)}|${norm(title)}`;
+      let c = map.get(key);
+      if (!c) {
+        c = {
+          key, id: t.id, title: t.title, artist: t.artist.name, album: t.album?.title || '',
+          md5: t.md5_image || t.album?.md5_image || '', duration: t.duration || 0, rank: t.rank || 0,
+          isrc: t.isrc || '', explicit: !!t.explicit_lyrics, preview: t.preview || '', link: t.link || '',
+          pos: {}, owners: new Set(), f: 0, posScore: 0,
+        };
+        map.set(key, c);
+      } else if ((t.rank || 0) > c.rank) {
+        Object.assign(c, { id: t.id, title: t.title, rank: t.rank, isrc: t.isrc || c.isrc, preview: t.preview || c.preview, link: t.link || c.link, md5: t.md5_image || c.md5 });
+      }
+      if (!(pl.id in c.pos)) {
+        c.pos[pl.id] = idx;
+        c.owners.add(pl.owner); c.f = c.owners.size;       // votes = distinct curators, not playlists
+        c.posScore += 1 - idx / Math.max(pl.tracks.length, 1);   // curators front-load their best picks
+      }
+    });
+  }
+  // Artist-level agreement: an artist that several of the vibe's curators play is on-genre,
+  // which keeps one off-topic playlist from injecting unrelated hits.
+  const artistOwners = new Map();
+  for (const c of map.values()) {
+    const a = norm(c.artist); if (!artistOwners.has(a)) artistOwners.set(a, new Set());
+    c.owners.forEach(o => artistOwners.get(a).add(o));
+  }
+  return [...map.values()].map(c => { c.af = artistOwners.get(norm(c.artist)).size; delete c.owners; return c; });
+}
+
+function scoreCandidates(cands, nPlaylists, popWeight, rand) {
+  const maxF = Math.max(1, ...cands.map(c => c.f)), maxAF = Math.max(1, ...cands.map(c => c.af || 1));
+  const ranks = cands.map(c => c.rank).sort((a, b) => a - b);
+  const pct = r => { let lo = 0, hi = ranks.length; while (lo < hi) { const m = (lo + hi) >> 1; if (ranks[m] < r) lo = m + 1; else hi = m; } return ranks.length > 1 ? lo / (ranks.length - 1) : 1; };
+  for (const c of cands) {
+    // How strongly the vibe's curators agree on this track, and on its artist.
+    c.cons = 0.5 * Math.log1p(c.f) / Math.log1p(maxF) + 0.5 * Math.log1p(c.af || 1) / Math.log1p(maxAF);
+    // Deezer rank is 0–1,000,000. Below ~100k is mostly stock/filler; 900k+ is a big hit.
+    c.pop = Math.max(0, Math.min(1, (c.rank - 100000) / 800000));
+    c.popPct = pct(c.rank);
+    const front = c.posScore / Math.max(1, c.f);
+    const popTerm = popWeight * (0.7 * c.pop + 0.3 * c.popPct) + (1 - popWeight) * (1 - c.popPct) * 0.8;
+    c.score = 0.45 * c.cons + 0.45 * popTerm + 0.1 * front + (rand ? rand() * 0.12 : 0);
+    if (nPlaylists >= 4 && c.f < 2) c.score -= 0.06;     // one-off picks are weaker vibe evidence
+  }
+  return cands.sort((a, b) => b.score - a.score);
+}
+
+function pickSet(ranked, n, maxPerArtist, skip = new Set()) {
+  const out = [], perArtist = new Map();
+  for (const c of ranked) {
+    if (out.length >= n) break;
+    if (skip.has(c.key)) continue;
+    const a = norm(c.artist), k = perArtist.get(a) || 0;
+    if (k >= maxPerArtist) continue;
+    perArtist.set(a, k + 1); out.push(c);
+  }
+  return out;
+}
+
+// Transition affinity: tracks that curators place close together usually mix well.
+function affinity(a, b) {
+  let s = 0;
+  for (const pid in a.pos) {
+    if (!(pid in b.pos)) continue;
+    const d = Math.abs(a.pos[pid] - b.pos[pid]);
+    s += d === 1 ? 1 : d <= 3 ? 0.5 : d <= 10 ? 0.2 : 0.08;
+  }
+  return Math.min(s, 2) / 2;
+}
+
+const SHAPES = {
+  arc: {
+    target: x => x < 0.75 ? 0.3 + 0.7 * Math.pow(x / 0.75, 1.15) : 1 - 0.3 * ((x - 0.75) / 0.25),
+    phase: x => x < 0.22 ? 'Warm-up' : x < 0.52 ? 'Build' : x < 0.86 ? 'Peak' : 'Last call',
+  },
+  hits: {
+    target: x => 1 - 0.75 * x,
+    phase: x => x < 0.34 ? 'Biggest hits' : x < 0.7 ? 'Keep it moving' : 'Deeper cuts',
+  },
+  build: {
+    target: x => 0.25 + 0.75 * x,
+    phase: x => x < 0.34 ? 'Opening' : x < 0.7 ? 'Rising' : 'Finale',
+  },
+};
+
+// "Heat" = popularity percentile within the set, blended with vibe consensus.
+function computeHeat(set) {
+  const byPop = [...set].sort((a, b) => a.rank - b.rank);
+  const byCons = [...set].sort((a, b) => a.f - b.f);
+  const d = Math.max(1, set.length - 1);
+  byPop.forEach((c, i) => c._hp = i / d);
+  byCons.forEach((c, i) => c._hc = i / d);
+  for (const c of set) c._b = 0.72 * c._hp + 0.28 * c._hc;
+  [...set].sort((a, b) => a._b - b._b).forEach((c, i) => { c.heat = i / d; delete c._b; });
+}
+
+// 1) Match tracks to the shape's heat curve (k-th coolest track → k-th lowest slot).
+// 2) Swap tracks between slots with similar targets when it improves flow
+//    (curator adjacency) or breaks up same-artist runs.
+function orderSet(set, shape, rand) {
+  const S = SHAPES[shape] || SHAPES.arc, n = set.length;
+  if (!n) return [];
+  computeHeat(set);
+  const xs = Array.from({ length: n }, (_, i) => n > 1 ? i / (n - 1) : 0);
+  const tg = xs.map(S.target);
+  for (const c of set) { c._a = norm(c.artist); c._j = c.heat + (rand ? (rand() - 0.5) * 0.15 : 0); }
+  const slots = [...tg.keys()].sort((a, b) => tg[a] - tg[b]);
+  const byHeat = [...set].sort((a, b) => a._j - b._j);
+  const out = new Array(n), sr = new Array(n);   // sr = slot's rank on the curve, 0..1
+  slots.forEach((s, k) => { out[s] = byHeat[k]; sr[s] = n > 1 ? k / (n - 1) : 0; });
+
+  const local = i => {   // cost contributed by slot i and its links to neighbours
+    if (i < 0 || i >= n) return 0;
+    const c = out[i];
+    let v = 2.2 * Math.abs(c.heat - sr[i]);
+    for (const k of [i - 2, i - 1, i + 1, i + 2]) if (k >= 0 && k < n && out[k]._a === c._a) v += 1.5;
+    if (i > 0) v -= 0.25 * affinity(out[i - 1], c);
+    if (i < n - 1) v -= 0.25 * affinity(c, out[i + 1]);
+    return v;
+  };
+  const around = (i, j) => { const ks = new Set([i - 2, i - 1, i, i + 1, i + 2, j - 2, j - 1, j, j + 1, j + 2]); let v = 0; ks.forEach(k => v += local(k)); return v; };
+  for (let pass = 0; pass < 4; pass++) {
+    let improved = false;
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+      if (Math.abs(tg[i] - tg[j]) > 0.18) continue;
+      const before = around(i, j);
+      [out[i], out[j]] = [out[j], out[i]];
+      if (around(i, j) < before - 1e-6) improved = true; else [out[i], out[j]] = [out[j], out[i]];
+    }
+    if (!improved) break;
+  }
+  out.forEach((c, i) => { c.phase = S.phase(xs[i]); delete c._a; delete c._j; });
+  return out;
+}
+
+/* ------------------------------ App state -------------------------------- */
+const state = LS.get('vibeset_state', null) || { vibe: '', tracks: [], pool: [], meta: null, seed: 1 };
+const opts = () => ({
+  len: +$('#optLen').value, maxArtist: +$('#optArtist').value,
+  shape: $('#optShape .on')?.dataset.v || 'arc', pop: +$('#optPop').value / 100,
+  exclude: $('#optExclude').value, clean: $('#optClean').checked,
+});
+function save() {
+  // Keep the swap pool modest so localStorage stays small.
+  LS.set('vibeset_state', { ...state, pool: state.pool.slice(0, 250), _cache: undefined });
+  LS.set('vibeset_opts', opts());
+}
+
+async function generate({ remix = false } = {}) {
+  const vibe = $('#vibe').value.trim();
+  if (!vibe) { setStatus('Type a vibe or tap a preset first.', true); $('#vibe').focus(); return; }
+  const o = opts();
+  $('#go').disabled = true; stopAudio();
+  setStatus('Finding playlists that match the vibe…'); setBar($('#bar'), 0.03);
+  try {
+    let playlists = state._cache?.vibe === vibe ? state._cache.playlists : null;
+    if (!playlists) {
+      playlists = await findVibePlaylists(vibe, f => setBar($('#bar'), f));
+      state._cache = { vibe, playlists };              // memory only (not saved)
+    }
+    if (!playlists.length) throw new Error('No playlists found for that vibe. Try simpler words, like "house party" or "90s hip hop".');
+    setStatus('Ranking and sequencing…'); setBar($('#bar'), 0.95);
+    state.seed = remix ? (state.seed || 1) + 1 : 1;
+    const rand = remix ? rng(state.seed * 9973) : null;
+    const ranked = scoreCandidates(buildCandidates(playlists, o), playlists.length, o.pop, rand);
+    if (ranked.length < 5) throw new Error('Not enough tracks found. Loosen the filters or try a broader vibe.');
+    const set = pickSet(ranked, o.len, o.maxArtist);
+    const ordered = orderSet(set, o.shape, rand);
+    const strip = c => ({ ...c, _hp: undefined, _hc: undefined, sp: undefined });
+    state.vibe = vibe;
+    state.tracks = ordered.map(strip);
+    const used = new Set(ordered.map(c => c.key));
+    state.pool = ranked.filter(c => !used.has(c.key)).slice(0, 250).map(strip);
+    state.meta = { playlists: playlists.length, candidates: ranked.length, shape: o.shape, at: Date.now() };
+    save(); render();
+    setStatus(''); setBar($('#bar'), null);
+    $('#results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    setStatus(e.message || String(e), true); setBar($('#bar'), null);
+  } finally { $('#go').disabled = false; }
+}
+
+/* -------------------------------- Render --------------------------------- */
+const SC_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 8.2v8.3h8.1a2.9 2.9 0 0 0 .4-5.8A4.6 4.6 0 0 0 11 8.2zM9.6 9.3h.9v7.2h-.9zM8.1 10.2H9v6.3h-.9zM6.6 10h.9v6.5h-.9zM5.1 11.2H6v5.3h-.9zM3.6 12.1h.9v4.4h-.9zM2.1 13.1H3v3.2h-.9z"/></svg>';
+const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>';
+const PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="#0d0d12"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>';
+const scUrl = t => `https://soundcloud.com/search/sounds?q=${encodeURIComponent(`${t.artist} ${norm(t.title)}`)}`;
+const scExtUrl = t => `https://soundcloud.com/search/sounds?q=${encodeURIComponent(`${t.artist} ${norm(t.title)} extended mix`)}`;
+const coverUrl = t => t.md5 ? `https://cdn-images.dzcdn.net/images/cover/${t.md5}/112x112-000000-80-0-0.jpg` : '';
+
+function render() {
+  const has = state.tracks.length > 0;
+  $('#results').classList.toggle('hidden', !has);
+  $('#dock').classList.toggle('on', has);
+  if (!has) return;
+  const total = state.tracks.reduce((s, t) => s + (t.duration || 0), 0);
+  $('#sumTitle').textContent = state.vibe;
+  $('#sumLen').textContent = `${state.tracks.length} tracks · ${Math.floor(total / 3600) ? Math.floor(total / 3600) + ' h ' : ''}${Math.round(total % 3600 / 60)} min`;
+  $('#sumSrc').textContent = state.meta ? `from ${state.meta.playlists} vibe playlists · ${state.meta.candidates} candidates` : '';
+  let html = '', lastPhase = null;
+  state.tracks.forEach((t, i) => {
+    if (t.phase && t.phase !== lastPhase) {
+      if (lastPhase !== null) html += '</ol>';
+      html += `<div class="phase">${esc(t.phase)}</div><ol class="tracks">`; lastPhase = t.phase;
+    } else if (i === 0) html += '<ol class="tracks">';
+    const spTag = t.sp ? '<span class="tag sp-ok">Spotify ✓</span>' : t.sp === false ? '<span class="tag sp-miss">not on Spotify</span>' : '';
+    html += `<li class="trk" data-i="${i}">
+      <div class="row">
+        <span class="num">${i + 1}</span>
+        <button class="cover ${t.preview ? 'has-prev' : ''} ${audioIdx === i ? 'playing' : ''}" data-act="play" type="button" aria-label="Preview">
+          ${coverUrl(t) ? `<img src="${esc(coverUrl(t))}" alt="" loading="lazy">` : ''}
+          <span class="play">${t.preview ? (audioIdx === i ? PAUSE_ICON : PLAY_ICON) : ''}</span>
+        </button>
+        <div class="meta" data-act="toggle">
+          <div class="t">${esc(t.title)}</div>
+          <div class="a">${esc(t.artist)}</div>
+          <div class="sub"><span>${fmtDur(t.duration)}</span><span class="heat" title="Crowd heat"><i style="width:${Math.round((t.heat ?? 0.5) * 100)}%"></i></span>${t.explicit ? '<span class="tag">E</span>' : ''}${spTag}</div>
+        </div>
+        <a class="sc" href="${esc(scUrl(t))}" target="_blank" rel="noopener" aria-label="Search on SoundCloud">${SC_ICON}</a>
+      </div>
+      <div class="actions">
+        <button type="button" data-act="up">↑ Up</button>
+        <button type="button" data-act="down">↓ Down</button>
+        <button type="button" data-act="swap">⇄ Swap</button>
+        <button type="button" data-act="del" class="del">✕ Remove</button>
+        <a href="${esc(scExtUrl(t))}" target="_blank" rel="noopener">SC: extended</a>
+        ${t.link ? `<a href="${esc(t.link)}" target="_blank" rel="noopener">Deezer</a>` : ''}
+        ${t.sp?.url ? `<a href="${esc(t.sp.url)}" target="_blank" rel="noopener">Spotify</a>` : ''}
+      </div>
+    </li>`;
+  });
+  html += '</ol>';
+  $('#list').innerHTML = html;
+}
+
+$('#list').addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const li = el.closest('.trk'), i = +li.dataset.i, T = state.tracks;
+  switch (el.dataset.act) {
+    case 'toggle': li.classList.toggle('open'); return;
+    case 'play': togglePreview(i); return;
+    case 'up': if (i > 0) { [T[i - 1], T[i]] = [T[i], T[i - 1]]; fixPhases(); } break;
+    case 'down': if (i < T.length - 1) { [T[i + 1], T[i]] = [T[i], T[i + 1]]; fixPhases(); } break;
+    case 'del': T.splice(i, 1); fixPhases(); toast('Removed'); break;
+    case 'swap': {
+      const cur = T[i], maxA = opts().maxArtist;
+      const counts = new Map(); T.forEach(t => counts.set(norm(t.artist), (counts.get(norm(t.artist)) || 0) + 1));
+      counts.set(norm(cur.artist), counts.get(norm(cur.artist)) - 1);
+      const j = state.pool.findIndex(c => (counts.get(norm(c.artist)) || 0) < maxA);
+      if (j < 0) { toast('No more alternatives — try Remix'); return; }
+      const [rep] = state.pool.splice(j, 1);
+      rep.heat = cur.heat; rep.phase = cur.phase;
+      T[i] = rep; state.pool.push({ ...cur, sp: undefined });
+      toast(`Swapped in ${rep.title}`);
+      break;
+    }
+  }
+  if (audioIdx != null) stopAudio();
+  save(); render();
+  const again = $(`.trk[data-i="${Math.max(0, Math.min(T.length - 1, el.dataset.act === 'up' ? i - 1 : el.dataset.act === 'down' ? i + 1 : i))}"]`);
+  if (again && el.dataset.act !== 'del') again.classList.add('open');
+});
+
+// After manual moves, keep phase headers proportional to position.
+function fixPhases() {
+  const S = SHAPES[state.meta?.shape] || SHAPES.arc, n = state.tracks.length;
+  state.tracks.forEach((t, i) => t.phase = S.phase(n > 1 ? i / (n - 1) : 0));
+}
+
+/* ------------------------------- Previews -------------------------------- */
+let audioIdx = null;
+const audio = $('#audio');
+function stopAudio() { audio.pause(); audioIdx = null; }
+function togglePreview(i) {
+  const t = state.tracks[i];
+  if (!t.preview) { toast('No preview for this one'); return; }
+  if (audioIdx === i) { stopAudio(); render(); return; }
+  audio.src = t.preview; audioIdx = i;
+  audio.play().catch(() => { toast('Preview unavailable — try Remix to refresh links'); audioIdx = null; render(); });
+  render();
+}
+audio.addEventListener('ended', () => { audioIdx = null; render(); });
+
+/* -------------------------------- Exports -------------------------------- */
+function setText() {
+  const lines = [`${state.vibe} — DJ set (${state.tracks.length} tracks)`, ''];
+  let ph = null;
+  state.tracks.forEach((t, i) => {
+    if (t.phase !== ph) { if (ph) lines.push(''); lines.push(`[${t.phase}]`); ph = t.phase; }
+    lines.push(`${String(i + 1).padStart(2, '0')}. ${t.artist} – ${t.title} (${fmtDur(t.duration)})`);
+  });
+  return lines.join('\n');
+}
+async function copyText(s) {
+  try { await navigator.clipboard.writeText(s); return true; } catch {
+    const ta = document.createElement('textarea'); ta.value = s; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return ok;
+  }
+}
+$('#copyBtn').onclick = async () => toast(await copyText(setText()) ? 'Set list copied' : 'Copy failed');
+
+function csv() {
+  const cell = v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  const head = ['#', 'Section', 'Title', 'Artist', 'Album', 'Duration', 'Crowd heat (0-100)', 'Vibe curators including it', 'Deezer rank', 'ISRC', 'Explicit', 'Spotify URL', 'SoundCloud search', 'Deezer URL'];
+  const rows = state.tracks.map((t, i) => [i + 1, t.phase, t.title, t.artist, t.album, fmtDur(t.duration), Math.round((t.heat ?? 0) * 100), t.f, t.rank, t.isrc, t.explicit ? 'yes' : 'no', t.sp?.url || '', scUrl(t), t.link]);
+  return '﻿' + [head, ...rows].map(r => r.map(cell).join(',')).join('\r\n');
+}
+const fileSlug = () => (state.vibe || 'vibe-set').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'vibe-set';
+$('#csvBtn').onclick = async () => {
+  const name = `${fileSlug()}-dj-set.csv`;
+  const blob = new Blob([csv()], { type: 'text/csv' });
+  const file = new File([blob], name, { type: 'text/csv' });
+  // On phones, the share sheet is friendlier than a download (save to Files, AirDrop, etc).
+  if (matchMedia('(pointer:coarse)').matches && navigator.canShare?.({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: name }); return; } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('CSV downloaded');
+};
+
+/* ------------------------------ Spotify PKCE ----------------------------- */
+const SP = {
+  scopes: 'playlist-modify-private playlist-modify-public',
+  // Same URI whether the page was opened as /f-house/ or /f-house/index.html.
+  redirect: () => location.origin + location.pathname.replace(/index\.html$/, ''),
+  clientId: () => LS.get('sp_client_id', ''),
+  tok: () => LS.get('sp_token', null),
+  connected() { return !!this.tok()?.refresh_token || (this.tok()?.expires_at > Date.now()); },
+};
+const b64url = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const randStr = n => { const a = new Uint8Array(n); crypto.getRandomValues(a); return b64url(a).slice(0, n); };
+
+async function spLogin(afterLogin = null) {
+  const id = SP.clientId();
+  if (!id) { openSettings(); return; }
+  if (!window.isSecureContext || !crypto.subtle) { toast('Spotify login needs HTTPS (or http://127.0.0.1)', 3500); return; }
+  const verifier = randStr(64);
+  const challenge = b64url(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier)));
+  const st = randStr(16);
+  LS.set('sp_pkce', { verifier, state: st, after: afterLogin });
+  save();
+  location.href = 'https://accounts.spotify.com/authorize?' + new URLSearchParams({
+    client_id: id, response_type: 'code', redirect_uri: SP.redirect(),
+    code_challenge_method: 'S256', code_challenge: challenge, scope: SP.scopes, state: st,
+  });
+}
+
+async function spTokenRequest(body) {
+  const r = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ client_id: SP.clientId(), ...body }),
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error_description || j.error || `Token error ${r.status}`);
+  const prev = SP.tok() || {};
+  const t = { access_token: j.access_token, refresh_token: j.refresh_token || prev.refresh_token, expires_at: Date.now() + (j.expires_in - 60) * 1000 };
+  LS.set('sp_token', t); return t;
+}
+
+async function spHandleRedirect() {
+  const u = new URL(location.href);
+  const code = u.searchParams.get('code'), err = u.searchParams.get('error'), st = u.searchParams.get('state');
+  if (!code && !err) return null;
+  history.replaceState(null, '', u.pathname);
+  const pk = LS.get('sp_pkce'); LS.del('sp_pkce');
+  if (err) { toast(`Spotify: ${err === 'access_denied' ? 'login cancelled' : err}`, 3500); return null; }
+  if (!pk || pk.state !== st) { toast('Spotify login expired — try again', 3500); return null; }
+  try {
+    await spTokenRequest({ grant_type: 'authorization_code', code, redirect_uri: SP.redirect(), code_verifier: pk.verifier });
+    toast('Spotify connected');
+    return pk.after;
+  } catch (e) { toast(`Spotify: ${e.message}`, 4000); return null; }
+}
+
+async function spAccess() {
+  let t = SP.tok();
+  if (!t) throw new Error('Not connected to Spotify');
+  if (Date.now() < t.expires_at) return t.access_token;
+  if (!t.refresh_token) throw new Error('Spotify session expired — reconnect');
+  try { t = await spTokenRequest({ grant_type: 'refresh_token', refresh_token: t.refresh_token }); }
+  catch (e) { LS.del('sp_token'); updatePill(); throw new Error('Spotify session expired — reconnect'); }
+  return t.access_token;
+}
+
+async function sp(path, { method = 'GET', body, retry = 0 } = {}) {
+  const r = await fetch(`https://api.spotify.com/v1${path}`, {
+    method, headers: { Authorization: `Bearer ${await spAccess()}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (r.status === 429 && retry < 5) { await sleep((+r.headers.get('Retry-After') || 2) * 1000 + 250); return sp(path, { method, body, retry: retry + 1 }); }
+  if (r.status === 401 && retry < 1) { const t = SP.tok(); if (t) { t.expires_at = 0; LS.set('sp_token', t); } return sp(path, { method, body, retry: retry + 1 }); }
+  if (r.status === 204) return null;
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) {
+    const msg = j.error?.message || `Spotify error ${r.status}`;
+    throw new Error(r.status === 403 ? `${msg}. If you're not the app owner, add your account under User Management in the Spotify dashboard.` : msg);
+  }
+  return j;
+}
+
+function matchScore(t, s) {
+  const tt = norm(t.title), st = norm(s.name), ta = norm(t.artist);
+  const arts = s.artists.map(a => norm(a.name));
+  let sc = 0;
+  if (st === tt) sc += 2; else if (st.includes(tt) || tt.includes(st)) sc += 1;
+  if (arts.includes(ta)) sc += 2; else if (arts.some(a => a.includes(ta) || ta.includes(a))) sc += 1;
+  if (t.duration && Math.abs(s.duration_ms / 1000 - t.duration) < 8) sc += 1;
+  return sc;
+}
+
+async function spMatch(t) {
+  if (t.sp) return t.sp;
+  if (t.isrc) {
+    const r = await sp(`/search?${new URLSearchParams({ q: `isrc:${t.isrc}`, type: 'track', limit: 1 })}`);
+    const s = r.tracks?.items?.[0];
+    if (s) return { uri: s.uri, url: s.external_urls?.spotify };
+  }
+  for (const q of [`track:${norm(t.title)} artist:${t.artist}`, `${t.artist} ${norm(t.title)}`]) {
+    const r = await sp(`/search?${new URLSearchParams({ q, type: 'track', limit: 5 })}`);
+    const best = (r.tracks?.items || []).map(s => [matchScore(t, s), s]).sort((a, b) => b[0] - a[0])[0];
+    if (best && best[0] >= 3) return { uri: best[1].uri, url: best[1].external_urls?.spotify };
+  }
+  return false;
+}
+
+async function spExport() {
+  const name = $('#plName').value.trim() || `${state.vibe} — DJ set`;
+  const bar = $('#exBar'), status = $('#exStatus');
+  $('#exGo').disabled = true; $('#exOpen').classList.add('hidden'); $('#exMiss').classList.add('hidden');
+  try {
+    status.textContent = 'Matching tracks on Spotify…'; setBar(bar, 0);
+    let n = 0;
+    await pool(state.tracks, 3, async t => {
+      try { t.sp = await spMatch(t); } catch (e) { if (/connected|expired|User Management/.test(e.message)) throw e; t.sp = false; }
+      setBar(bar, 0.85 * (++n / state.tracks.length));
+    });
+    save(); render();
+    const uris = state.tracks.filter(t => t.sp?.uri).map(t => t.sp.uri);
+    if (!uris.length) throw new Error('None of the tracks could be matched on Spotify.');
+    status.textContent = 'Creating playlist…';
+    const pl = await sp('/me/playlists', { method: 'POST', body: {
+      name, public: $('#plPublic').checked,
+      description: `Vibe: ${state.vibe}. Built with Vibe Set (${state.tracks.length} tracks, ordered for flow).`.slice(0, 300),
+    } });
+    for (let i = 0; i < uris.length; i += 100) await sp(`/playlists/${pl.id}/items`, { method: 'POST', body: { uris: uris.slice(i, i + 100) } });
+    setBar(bar, 1);
+    const miss = state.tracks.filter(t => t.sp === false);
+    status.textContent = `Saved ${uris.length} of ${state.tracks.length} tracks to “${name}”.`;
+    if (miss.length) {
+      $('#exMiss').innerHTML = '<b>Not found on Spotify</b> (grab these from SoundCloud):<br>' + miss.map(t => `• <a href="${esc(scUrl(t))}" target="_blank" rel="noopener">${esc(t.artist)} – ${esc(t.title)}</a>`).join('<br>');
+      $('#exMiss').classList.remove('hidden');
+    }
+    const a = $('#exOpen'); a.href = pl.external_urls?.spotify || `https://open.spotify.com/playlist/${pl.id}`; a.classList.remove('hidden');
+  } catch (e) {
+    status.textContent = e.message; setBar(bar, null);
+    if (/reconnect|Not connected/.test(e.message)) updatePill();
+  } finally { $('#exGo').disabled = false; }
+}
+
+function openExport() {
+  if (!state.tracks.length) return;
+  if (!SP.clientId()) { openSettings(); toast('Add your Spotify Client ID first'); return; }
+  if (!SP.connected()) { spLogin('export'); return; }
+  $('#plName').value = `${state.vibe} — DJ set`;
+  $('#exStatus').textContent = `${state.tracks.length} tracks will be matched (by ISRC first, then title + artist) and saved in this order.`;
+  setBar($('#exBar'), null); $('#exOpen').classList.add('hidden'); $('#exMiss').classList.add('hidden');
+  $('#exportDlg').showModal();
+}
+
+/* ------------------------------ Settings UI ------------------------------ */
+function updatePill() {
+  const on = SP.connected();
+  $('#spPill').classList.toggle('on', on);
+  $('#spPillTxt').textContent = on ? 'Connected' : SP.clientId() ? 'Connect' : 'Spotify';
+}
+function openSettings() {
+  $('#redirUri').textContent = SP.redirect();
+  $('#clientId').value = SP.clientId();
+  const secure = window.isSecureContext;
+  $('#secureNote').textContent = secure
+    ? 'Spotify only accepts HTTPS redirect URIs (or http://127.0.0.1 for local testing). It must match character-for-character.'
+    : '⚠️ This page isn’t on HTTPS, so Spotify login won’t work here. Host it on HTTPS (e.g. GitHub Pages) or open it via http://127.0.0.1.';
+  $('#settings').showModal();
+}
+$('#openSettings').onclick = openSettings;
+$('#spPill').onclick = () => SP.connected() ? openSettings() : (SP.clientId() ? spLogin() : openSettings());
+$('#copyRedir').onclick = async () => toast(await copyText(SP.redirect()) ? 'Redirect URI copied' : 'Copy failed');
+$('#saveSettings').onclick = () => {
+  const id = $('#clientId').value.trim();
+  if (!/^[a-f0-9]{32}$/i.test(id)) { toast('That doesn’t look like a Client ID (32 hex characters)'); return; }
+  if (id !== SP.clientId()) LS.del('sp_token');
+  LS.set('sp_client_id', id); updatePill();
+  $('#settings').close();
+  if (!SP.connected()) spLogin();
+};
+$('#logoutBtn').onclick = () => { LS.del('sp_token'); updatePill(); toast('Disconnected from Spotify'); };
+$('#spBtn').onclick = openExport;
+$('#exGo').onclick = spExport;
+
+/* ------------------------------- Wiring ---------------------------------- */
+$('#chips').innerHTML = PRESETS.map(([label, q]) => `<button class="chip" type="button" data-q="${esc(q)}">${esc(label)}</button>`).join('');
+$('#chips').onclick = e => { const c = e.target.closest('.chip'); if (!c) return; $('#vibe').value = c.dataset.q; generate(); };
+$('#optShape').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  $('#optShape').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  LS.set('vibeset_opts', opts());
+};
+$('#go').onclick = () => generate();
+$('#vibe').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); generate(); } });
+$('#remix').onclick = () => { $('#vibe').value = $('#vibe').value.trim() || state.vibe; generate({ remix: true }); };
+$('#reflow').onclick = () => {
+  const o = opts(); stopAudio();
+  state.tracks = orderSet(state.tracks, o.shape, null).map(c => ({ ...c, _hp: undefined, _hc: undefined }));
+  state.meta = { ...(state.meta || {}), shape: o.shape };
+  save(); render(); toast(`Re-ordered: ${$('#optShape .on').textContent}`);
+};
+$('#more').onclick = () => {
+  const maxA = opts().maxArtist, add = [];
+  const counts = new Map(); state.tracks.forEach(t => counts.set(norm(t.artist), (counts.get(norm(t.artist)) || 0) + 1));
+  for (let j = 0; j < state.pool.length && add.length < 5;) {
+    const c = state.pool[j], a = norm(c.artist);
+    if ((counts.get(a) || 0) < maxA) { counts.set(a, (counts.get(a) || 0) + 1); add.push(...state.pool.splice(j, 1)); } else j++;
+  }
+  if (!add.length) { toast('No more candidates — try Remix'); return; }
+  const o = opts(); stopAudio();
+  state.tracks = orderSet([...state.tracks, ...add], o.shape, null).map(c => ({ ...c, _hp: undefined, _hc: undefined }));
+  state.meta = { ...(state.meta || {}), shape: o.shape };
+  save(); render(); toast(`Added ${add.length} tracks and re-ordered`);
+};
+
+(async function init() {
+  const o = LS.get('vibeset_opts', null);
+  if (o) {
+    $('#optLen').value = o.len; $('#optArtist').value = o.maxArtist; $('#optPop').value = Math.round(o.pop * 100);
+    $('#optExclude').value = o.exclude || ''; $('#optClean').checked = !!o.clean;
+    $('#optShape').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.v === o.shape));
+  }
+  ['#optLen', '#optArtist', '#optPop', '#optExclude', '#optClean'].forEach(s => $(s).addEventListener('change', () => LS.set('vibeset_opts', opts())));
+  $('#vibe').value = state.vibe || '';
+  render();
+  const after = await spHandleRedirect();
+  updatePill();
+  if (after === 'export') openExport();
+})();
+</script>
+</body>
+</html>
